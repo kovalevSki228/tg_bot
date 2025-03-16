@@ -12,7 +12,7 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
     message_text = message.text.split()
-
+    print("Environment Variables:", message.text)
     try:
         if (message_text[0] == '@all'):
             bot.send_message(
