@@ -1,6 +1,6 @@
 import os
 import telebot
-
+print("Environment Variables:", os.environ)
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 if not TOKEN:
     raise ValueError("Ошибка: TELEGRAM_BOT_TOKEN не задан!")
