@@ -1,6 +1,6 @@
 import os
 import telebot
-
+print("Environment Variables:", os.environ)
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 if not TOKEN:
     raise ValueError("Ошибка: TELEGRAM_BOT_TOKEN не задан!")
@@ -11,7 +11,7 @@ bot = telebot.TeleBot(TOKEN)
 # Define a handler for text messages
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
-    print("Environment Variables:", message.text)
+    message_text = message.text.split()
     try:
         if (message_text[0] == '@all'):
             bot.send_message(
