@@ -9,8 +9,8 @@ if not TOKEN:
 bot = telebot.TeleBot(TOKEN)
 # Список команд для бота
 commands = [
-    BotCommand("@all", "Тегнуть всех"),
-    BotCommand("@repo", "Тегнуть в репу"),
+    BotCommand("all", "Тегнуть всех"),
+    BotCommand("repo", "Тегнуть в репу"),
 ]
 
 # Устанавливаем команды
