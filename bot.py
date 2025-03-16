@@ -18,6 +18,11 @@ def handle_text(message):
                 message.chat.id,
                 f"@i_bojenka @crownvagen @kosoy06 @fursten1 @AquaDarida @karanik_y @youlvly @danilamankevich @luvrzinc {message_text}"
             )
+        if (message_text[0] == '@repo'):
+            bot.send_message(
+                message.chat.id,
+                f"@i_bojenka @crownvagen @kosoy06 @fursten1 @AquaDarida @karanik_y в репу"
+            )
     except ValueError:
         bot.send_message(message.chat.id, "Иди нахуй")
 
