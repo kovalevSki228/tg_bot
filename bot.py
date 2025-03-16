@@ -1,7 +1,7 @@
 import telebot
 
 # Replace 'YOUR_TOKEN' with your actual bot token
-bot = telebot.TeleBot('')
+bot = telebot.TeleBot('TELEGRAM_BOT_TOKEN')
 
 # Define a handler for text messages
 @bot.message_handler(content_types=['text'])
