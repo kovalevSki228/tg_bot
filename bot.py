@@ -1,12 +1,20 @@
 import os
 import telebot
+from telebot.types import BotCommand
 print("Environment Variables:", os.environ)
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 if not TOKEN:
     raise ValueError("Ошибка: TELEGRAM_BOT_TOKEN не задан!")
 
 bot = telebot.TeleBot(TOKEN)
+# Список команд для бота
+commands = [
+    BotCommand("@all", "Тегнуть всех"),
+    BotCommand("@repo", "Тегнуть в репу"),
+]
 
+# Устанавливаем команды
+bot.set_my_commands(commands)
 
 # Define a handler for text messages
 @bot.message_handler(content_types=['text'])
