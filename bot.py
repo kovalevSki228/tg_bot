@@ -18,8 +18,19 @@ commands = [
     BotCommand("fact", "Случайный интересный факт"),
     BotCommand("joke", "Случайная шутка"),
     BotCommand("meme", "Случайный мем"),
+    BotCommand("all", "Тегнуть всех"),
+    BotCommand("repo", "Тегнуть в репу"),
+    BotCommand("gosha_gay", "Гоша гей"),
 ]
 bot.set_my_commands(commands)
+REPO_PLAYERS = [
+    "@i_bojenka",
+    "@crownvagen",
+    "@kosoy06",
+    "@fursten1",
+    "@AquaDarida",
+    "@danilamankevich",
+]
 
 # 📌 Функции для запросов к API
 def get_insult():
@@ -95,8 +106,26 @@ def fact(message):
 def joke(message):
     bot.send_message(message.chat.id, get_joke())
 
+@bot.message_handler(commands=["gosha_gay"])
+def joke(message):
+    bot.send_message(message.chat.id, "Гоша гей! 🤡")
+
 @bot.message_handler(commands=["meme"])
 def meme(message):
     bot.send_photo(message.chat.id, get_meme())
+@bot.message_handler(commands=["repo"])
+def handle_repo(message):
+    bot.send_message(
+        message.chat.id,
+        f"{' '.join(REPO_PLAYERS)} в репу"
+    )
+
+@bot.message_handler(commands=["all"])
+def get_admins(message):
+    admin_list = get_admins_list(message.chat.id)
+    if admin_list:
+        bot.send_message(message.chat.id, f"{' '.join(admin_list)}")
+    else:
+        bot.send_message(message.chat.id, "Нет доступных администраторов.")
 
 bot.polling(none_stop=True, interval=0)
