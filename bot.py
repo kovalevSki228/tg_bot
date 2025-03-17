@@ -108,7 +108,7 @@ def joke(message):
 
 @bot.message_handler(commands=["gosha_gay"])
 def joke(message):
-    bot.send_message(message.chat.id, "Гоша гей! 🤡")
+    bot.send_message(message.chat.id, "Илья гей! 🤡")
 
 @bot.message_handler(commands=["meme"])
 def meme(message):
