@@ -1,4 +1,6 @@
-const BOT_TOKEN = '6753291044:AAF6PVU2k0Vhytx0wzvhBOjvf5e2EJwySts'; 
+import { CONFIG } from './config';
+
+const BOT_TOKEN = CONFIG.TELEGRAM_BOT_TOKEN; 
 
 let chatId = "";
 let lastKnownMessageId = null;
