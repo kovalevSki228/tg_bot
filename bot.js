@@ -1,4 +1,4 @@
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN; 
+const BOT_TOKEN = '6753291044:AAF6PVU2k0Vhytx0wzvhBOjvf5e2EJwySts'; 
 
 let chatId = "";
 let lastKnownMessageId = null;
