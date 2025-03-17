@@ -1,6 +1,8 @@
 import { CONFIG } from './config';
 
-const BOT_TOKEN = CONFIG.TELEGRAM_BOT_TOKEN; 
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN; 
+
+if (!BOT_TOKEN) throw new Error('Invalid BOT_TOKEN')
 
 let chatId = "";
 let lastKnownMessageId = null;
