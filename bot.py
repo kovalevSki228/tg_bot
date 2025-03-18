@@ -21,6 +21,9 @@ commands = [
     BotCommand("all", "Тегнуть всех"),
     BotCommand("repo", "Тегнуть в репу"),
     BotCommand("gosha_gay", "Гоша гей"),
+    BotCommand("chief", "Рандомный главный черт дня"),
+    BotCommand("random_admin", "Рандомный админ"),
+    BotCommand("random", "Рандомный человек из списка"),
 ]
 bot.set_my_commands(commands)
 REPO_PLAYERS = [
@@ -67,7 +70,27 @@ def get_meme():
         return response.get("url", "https://i.redd.it/7n7lbtrkslm51.jpg")
     except:
         return "Что-то пошло не так с мемами, но представь смешной мем"
+def save_chief(chat_id, username):
+    data = {
+        "chat_id": chat_id,
+        "username": username,
+        "date": str(datetime.date.today())
+    }
+    with open(CHIEF_FILE, "w") as f:
+        json.dump(data, f)
 
+def load_chief(chat_id):
+    if not os.path.exists(CHIEF_FILE):
+        return None
+
+    with open(CHIEF_FILE, "r") as f:
+        try:
+            data = json.load(f)
+            if data.get("chat_id") == chat_id and data.get("date") == str(datetime.date.today()):
+                return data.get("username")
+        except json.JSONDecodeError:
+            return None
+    return None
 # 🔥 **Команды**
 @bot.message_handler(commands=["russian_roulette"])
 def russian_roulette(message):
@@ -108,7 +131,7 @@ def joke(message):
 
 @bot.message_handler(commands=["gosha_gay"])
 def joke(message):
-    bot.send_message(message.chat.id, "Илья гей! 🤡")
+    bot.send_message(message.chat.id, "Гоша гей! 🤡")
 
 @bot.message_handler(commands=["meme"])
 def meme(message):
@@ -119,6 +142,39 @@ def handle_repo(message):
         message.chat.id,
         f"{' '.join(REPO_PLAYERS)} в репу"
     )
+@bot.message_handler(commands=["chief"])
+def choose_chief(message):
+    current_chief = load_chief(message.chat.id)
+    if current_chief:
+        bot.send_message(message.chat.id, f"👹 Черт все еще: {current_chief}")
+        return
+
+    admins = get_admins_list(message.chat.id)
+    if not admins:
+        bot.send_message(message.chat.id, "В чате нет администраторов.")
+        return
+
+    chosen_one = random.choice(admins)
+    save_chief(message.chat.id, chosen_one)
+    bot.send_message(message.chat.id, f"🔥 Сегодня главный черт: {chosen_one} 🔥")
+
+@bot.message_handler(commands=["random_admin"])
+def random_admin(message):
+    admin_list = get_admins_list(message.chat.id)
+    if admin_list:
+        chosen_admin = random.choice(admin_list)
+        bot.send_message(message.chat.id, f"🎲 Случайный админ: {chosen_admin}")
+    else:
+        bot.send_message(message.chat.id, "В чате нет администраторов.")
+
+@bot.message_handler(commands=["random"])
+def random_user(message):
+    args = message.text.split()[1:] 
+    if args:
+        chosen_user = random.choice(args)
+        bot.send_message(message.chat.id, f"🎲 Случайный выбор: {chosen_user}")
+    else:
+        bot.send_message(message.chat.id, "Использование: /random @user1 @user2 @user3")
 
 @bot.message_handler(commands=["all"])
 def get_admins(message):
