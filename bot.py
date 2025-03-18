@@ -122,7 +122,7 @@ def handle_repo(message):
 
 @bot.message_handler(commands=["all"])
 def get_admins(message):
-    admin_list = get_admins_list(message.chat.id)
+    admin_list = bot.get_chat_administrators(message.chat.id)
     if admin_list:
         bot.send_message(message.chat.id, f"{' '.join(admin_list)}")
     else:
