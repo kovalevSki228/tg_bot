@@ -227,9 +227,6 @@ def get_admins(message):
         bot.send_message(message.chat.id, f"{' '.join(admin_list)}")
     else:
         bot.send_message(message.chat.id, "Нет доступных администраторов.")
-
-bot.polling(none_stop=True, interval=0)
-# Отслеживаем все сообщения, чтобы остановить спам
 @bot.message_handler(func=lambda m: True)
 def stop_repiat_if_user_replies(message):
     username = f"@{message.from_user.username}" if message.from_user.username else None
@@ -241,3 +238,5 @@ def stop_repiat_if_user_replies(message):
     if chat_id in repiat_tasks and username in repiat_tasks[chat_id]:
         repiat_tasks[chat_id].remove(username)
         bot.send_message(chat_id, f"✅ {username} ответил!")
+bot.polling(none_stop=True, interval=0)
+# Отслеживаем все сообщения, чтобы остановить спам
