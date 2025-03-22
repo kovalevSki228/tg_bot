@@ -24,6 +24,7 @@ commands = [
     BotCommand("chief", "Рандомный главный черт дня"),
     BotCommand("random_admin", "Рандомный админ"),
     BotCommand("random", "Рандомный человек из списка"),
+    BotCommand("repiat", "Тегнуть пользователя"),
 ]
 bot.set_my_commands(commands)
 REPO_PLAYERS = [
