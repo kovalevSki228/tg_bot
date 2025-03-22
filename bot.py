@@ -136,19 +136,6 @@ def repiat(message):
 
     threading.Thread(target=spam, daemon=True).start()
 
-# Отслеживаем все сообщения, чтобы остановить спам
-@bot.message_handler(func=lambda m: True)
-def stop_repiat_if_user_replies(message):
-    username = f"@{message.from_user.username}" if message.from_user.username else None
-    if not username:
-        return
-
-    chat_id = message.chat.id
-
-    if chat_id in repiat_tasks and username in repiat_tasks[chat_id]:
-        repiat_tasks[chat_id].remove(username)
-        bot.send_message(chat_id, f"✅ {username} ответил!")
-
 @bot.message_handler(commands=["russian_roulette"])
 def russian_roulette(message):
     if random.randint(1, 6) == 1:
@@ -242,3 +229,15 @@ def get_admins(message):
         bot.send_message(message.chat.id, "Нет доступных администраторов.")
 
 bot.polling(none_stop=True, interval=0)
+# Отслеживаем все сообщения, чтобы остановить спам
+@bot.message_handler(func=lambda m: True)
+def stop_repiat_if_user_replies(message):
+    username = f"@{message.from_user.username}" if message.from_user.username else None
+    if not username:
+        return
+
+    chat_id = message.chat.id
+
+    if chat_id in repiat_tasks and username in repiat_tasks[chat_id]:
+        repiat_tasks[chat_id].remove(username)
+        bot.send_message(chat_id, f"✅ {username} ответил!")
