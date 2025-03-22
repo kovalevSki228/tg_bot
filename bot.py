@@ -2,6 +2,8 @@ import os
 import random
 import telebot
 import requests
+import threading
+import time
 from telebot.types import BotCommand
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -102,14 +104,14 @@ def is_user_admin(chat_id, username):
                     return True
         return False
     except Exception as e:
-        print(f"Ошибка при получении админов: {e}")
+        print(f"Ошибка при проверке админов: {e}")
         return False
-# 🔥 **Команды**
+
 @bot.message_handler(commands=["repiat"])
 def repiat(message):
     args = message.text.split()
     if len(args) < 2 or not args[1].startswith("@"):
-        bot.send_message(message.chat.id, "Использование: /repiat @username")
+        bot.send_message(message.chat.id, "❗ Использование: /repiat @username")
         return
 
     username = args[1]
@@ -120,7 +122,7 @@ def repiat(message):
         return
 
     if chat_id in repiat_tasks and username in repiat_tasks[chat_id]:
-        bot.send_message(chat_id, f"Уже спамим {username}!")
+        bot.send_message(chat_id, f"🔁 Уже тегаю {username}!")
         return
 
     def spam():
@@ -134,6 +136,7 @@ def repiat(message):
 
     threading.Thread(target=spam, daemon=True).start()
 
+# Отслеживаем все сообщения, чтобы остановить спам
 @bot.message_handler(func=lambda m: True)
 def stop_repiat_if_user_replies(message):
     username = f"@{message.from_user.username}" if message.from_user.username else None
@@ -144,7 +147,7 @@ def stop_repiat_if_user_replies(message):
 
     if chat_id in repiat_tasks and username in repiat_tasks[chat_id]:
         repiat_tasks[chat_id].remove(username)
-        bot.send_message(chat_id, f"{username} ответил!")
+        bot.send_message(chat_id, f"✅ {username} ответил!")
 
 @bot.message_handler(commands=["russian_roulette"])
 def russian_roulette(message):
