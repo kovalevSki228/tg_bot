@@ -34,6 +34,7 @@ REPO_PLAYERS = [
     "@AquaDarida",
     "@danilamankevich",
 ]
+repiat_tasks = {}
 
 # 📌 Функции для запросов к API
 def get_insult():
@@ -91,7 +92,59 @@ def load_chief(chat_id):
         except json.JSONDecodeError:
             return None
     return None
+def is_user_admin(chat_id, username):
+    try:
+        admins = bot.get_chat_administrators(chat_id)
+        for admin in admins:
+            if admin.user.username and admin.user.username.lower() == username.lstrip("@").lower():
+                if not admin.user.is_bot:
+                    return True
+        return False
+    except Exception as e:
+        print(f"Ошибка при получении админов: {e}")
+        return False
 # 🔥 **Команды**
+@bot.message_handler(commands=["repiat"])
+def repiat(message):
+    args = message.text.split()
+    if len(args) < 2 or not args[1].startswith("@"):
+        bot.send_message(message.chat.id, "Использование: /repiat @username")
+        return
+
+    username = args[1]
+    chat_id = message.chat.id
+
+    if not is_user_admin(chat_id, username):
+        bot.send_message(chat_id, f"{username} не является админом или является ботом.")
+        return
+
+    if chat_id in repiat_tasks and username in repiat_tasks[chat_id]:
+        bot.send_message(chat_id, f"Уже спамим {username}!")
+        return
+
+    def spam():
+        while username in repiat_tasks.get(chat_id, []):
+            bot.send_message(chat_id, f"{username}")
+            time.sleep(2)
+
+    if chat_id not in repiat_tasks:
+        repiat_tasks[chat_id] = []
+    repiat_tasks[chat_id].append(username)
+
+    threading.Thread(target=spam, daemon=True).start()
+
+@bot.message_handler(func=lambda m: True)
+def stop_repiat_if_user_replies(message):
+    username = f"@{message.from_user.username}" if message.from_user.username else None
+    if not username:
+        return
+
+    chat_id = message.chat.id
+
+    if chat_id in repiat_tasks and username in repiat_tasks[chat_id]:
+        repiat_tasks[chat_id].remove(username)
+        bot.send_message(chat_id, f"{username} ответил!")
+
 @bot.message_handler(commands=["russian_roulette"])
 def russian_roulette(message):
     if random.randint(1, 6) == 1:
